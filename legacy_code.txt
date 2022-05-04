@@ -1,0 +1,16 @@
+@client.event
+async def on_message(message):
+  global shroom_count
+  global last_farmer
+  if message.channel.id in channel_id and not message.author.bot:
+    if message.author.id != last_farmer:
+      if message.content == ('🍄'): # mushroom farming trigger
+        shroom_count += 1
+last_farmer = message.author.id
+        if shroom_count == 1:
+          await message.channel.send('First mushroom farmed today!🍄')
+        else:
+          await message.channel.send(f'{shroom_count} mushrooms farmed today!🍄')
+
+    else:
+      await message.content.send('You can only farm 1 mushroom at a time')
