@@ -1,5 +1,0 @@
-TO-DO List
-
-1: Use replit's DB to separate data from different servers
-2: Add more commands to the bot (!uptime, !reset_count, !current_count)
-3: Find a way to get the damned grass thingy to work
