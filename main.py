@@ -9,15 +9,14 @@ from keep_alive import keep_alive
 from datadump import read_data, write_data
 
 load_dotenv()
+bot = commands.Bot(command_prefix='$')
 
 #initialization
-current_dt = 0
-current_ts = 0
 TOKEN = os.getenv('DISCORD_TOKEN')
 OWNER_ID = os.getenv('OWNER_ID')
 channel_id = os.getenv('CHANNEL_ID')
 shroom_count = 0
-bot = commands.Bot(command_prefix='$')
+
   
 @bot.event
 async def on_ready(): #bot boots up
@@ -43,8 +42,8 @@ async def shroom_farm(message):
 
 @bot.command(name='save_count')
 async def save_count(message):
-  global current_dt
-  global current_ts
+  current_dt = 0
+  current_ts = 0
   if message.author.id == int(OWNER_ID) and not message.guild:
     current_dt = datetime.now()
     current_ts = datetime.timestamp(current_dt)
