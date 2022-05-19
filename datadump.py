@@ -17,13 +17,3 @@ def write_data(current_count, timestamp):
     }
   }
   json.dump(data, open("data.json", "w"))
-
-#data = {
-#  "Server ID": {
-#    "Current count": 0,
-#    "Timestamp": 0
-#  }
-#}
-
-#json.dump(dictionary_name, open("jsonfile.json", "w")) #writing
-#dictionary_name = json.load(open("jsonfile.json", 'r')) #reading
