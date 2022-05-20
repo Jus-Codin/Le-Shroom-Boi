@@ -1,14 +1,12 @@
 # bot.py
 import os
-import time
-import schedule
 from discord.ext import commands
 from dotenv import load_dotenv
 from datetime import datetime
 
 #self-made packages
 from keep_alive import keep_alive
-from datadump import read_data, write_data
+from adfunc import read_data, write_data
 
 load_dotenv()
 bot = commands.Bot(command_prefix='$')
@@ -18,6 +16,9 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 OWNER_ID = os.getenv('OWNER_ID')
 channel_id = os.getenv('CHANNEL_ID')
 admin_channel = os.getenv('ADMIN_CHANNEL')
+logs_channel = os.getenv('LOGS_CHANNEL')
+command_execute = 0
+ts_lastshroom = 0
 shroom_count = 0
 last_farmer = 0
 last_mushroom = 0
@@ -32,21 +33,30 @@ async def shroom_farm(message):
   global shroom_count
   global last_farmer
   global last_mushroom
+  global ts_lastshroom
   if str(message.channel.id) in channel_id and not message.author.bot:
-    if message.content == '🍄':
-      current_dt = datetime.now().strftime('%d')
-      if current_dt != last_mushroom:
-        shroom_count = 0
-      if message.author.id != last_farmer:
-        last_mushroom = current_dt
-        shroom_count += 1
-        last_farmer = message.author.id
-        if shroom_count == 1:
-          await message.channel.send('First mushroom farmed today!🍄')
-        else:
-          await message.channel.send(f'{shroom_count} mushrooms farmed today!🍄')  
-      else:
-        await message.channel.send('You can only farm 1 mushroom at a time')
+    if message.author.id != last_farmer:
+      if message.content == '🍄':
+        current_dt = datetime.now().strftime('%d')
+        print(current_dt)
+        if current_dt != ts_lastshroom:
+          last_farmer = 0
+          shroom_count = 0
+          ts_lastshroom = current_dt
+          reset_time = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+          channel_to_send = int(logs_channel)
+          channel = bot.get_channel(channel_to_send)
+          await channel.send(f'Count reset at {reset_time}')
+        if message.author.id != last_farmer:
+          last_mushroom = current_dt
+          shroom_count += 1
+          last_farmer = message.author.id
+          if shroom_count == 1:
+            await message.channel.send('First mushroom farmed today!🍄')
+          else:
+            await message.channel.send(f'{shroom_count} mushrooms farmed today!🍄')  
+    else:
+      await message.channel.send('You can only farm 1 mushroom at a time')
 
 
 @bot.command(name='save_count', brief='Saves the current count', description='Saves the current count to the database (Requires administrator access) - WIP')
@@ -59,6 +69,10 @@ async def save_count(message):
     write_data(shroom_count, current_ts)
     print('Count saved')
     await message.channel.send('Count saved')
+    command_execution = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+    channel_to_send = int(logs_channel)
+    channel = bot.get_channel(channel_to_send)
+    await channel.send(f'save_count command executed at {command_execution}')
   else:
     await message.channel.send('You do not have sufficient permissions to use this command')
   
@@ -66,29 +80,41 @@ async def save_count(message):
 async def show_save(message):
   current_json = read_data()
   await message.channel.send(current_json)
+  command_execution = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+  channel_to_send = int(logs_channel)
+  channel = bot.get_channel(channel_to_send)
+  await channel.send(f'show_count command executed at {command_execution}')
 
-@bot.command(name='change_count', brief='Changes the current count', description='Changes the current count (Requires administrator access)')
-async def change_count(message, arg):
+@bot.command(name='edit_count', brief='Changes the current count', description='Changes the current count (Requires administrator access)')
+async def edit_count(message, new_count):
   global shroom_count
   if message.author.id == int(OWNER_ID) and not message.guild:
-    shroom_count = int(arg)
-    await message.channel.send(f'Count changed to {arg}')
+    shroom_count = int(new_count)
+    await message.channel.send(f'Count changed to {new_count}')
+    command_execution = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+    channel_to_send = int(logs_channel)
+    channel = bot.get_channel(channel_to_send)
+    await channel.send(f'edit_count command executed at {command_execution}')
   else:
     await message.channel.send('You do not have sufficient permissions to use this command')
 
 @bot.command(name='dev_warning', brief='Sends a dev warning', description='Sends a warning about active development to the target channel (Requires administrator access)')
-async def dev_warning(message, arg):
+async def dev_warning(message, target_channel):
   if message.author.id == int(OWNER_ID) and not message.guild: #checks if the person sending the command has permissions to do so, and if its in a DM channel
-    channel_to_send = int(arg)
+    channel_to_send = int(target_channel)
     channel = bot.get_channel(channel_to_send)
     await channel.send('This bot is currently under maintenance')
 
 @bot.command(name='send', brief='Sends a message as the bot', description='Sends a message to the target channel as the bot (Requires administrator access)')
-async def send_message(message, target_channel, *, arg):
+async def remote_send(message, target_channel, *, arg):
   if message.author.id == int(OWNER_ID) and not message.guild: #checks if the person sending the command has permissions to do so, and if its in a DM channel
     channel_to_send = int(target_channel)
     channel = bot.get_channel(channel_to_send)
     await channel.send(arg)
+    command_execution = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+    channel_to_send = int(logs_channel)
+    channel = bot.get_channel(channel_to_send)
+    await channel.send(f'remote_send command executed at {command_execution}')
 
 keep_alive()
 bot.run(TOKEN)
