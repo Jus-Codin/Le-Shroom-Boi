@@ -16,4 +16,4 @@ def write_data(current_count, timestamp):
       "Timestamp": timestamp
     }
   }
-  json.dump(data, open("data.json", "w"))
+  json.dump(data, open("data.json", "w"), indent=4)
