@@ -5,10 +5,10 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 from datetime import datetime
+from adfunc import crash_check, write_data
 
 #self-made packages
 from keep_alive import keep_alive
-from adfunc import read_data, write_data
 
 load_dotenv()
 bot = commands.Bot(command_prefix='$')
@@ -29,6 +29,9 @@ last_mushroom = 0
   
 @bot.event
 async def on_ready(): #bot boots up
+  global shroom_count
+  startup_timestamp = datetime.now(sgt).strftime('%Y/%m/%d, %H:%M:%S')
+  shroom_count = crash_check(shroom_count, startup_timestamp)
   print(f'{bot.user.name} has connected to Discord')
 
 @bot.listen('on_message') #waits for the on_message() event to be called
@@ -61,7 +64,7 @@ async def shroom_farm(message):
           else:
             embed = discord.Embed(title="Mushroom Farmed!", description=f"{shroom_count} mushrooms farmed today!🍄", color=discord.Color.red())
             await message.channel.send(embed=embed)
-          farm_time = datetime.now(sgt).strftime('%Y/%m/%d, %H:%M:%S')
+          farm_time = datetime.now(sgt)
           write_data(shroom_count, farm_time)
     else:
       embed = discord.Embed(title="You cannot farm mushrooms now", description="You can only farm one mushroom at a time", color=discord.Color.red())
