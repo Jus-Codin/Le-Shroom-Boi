@@ -29,9 +29,9 @@ last_mushroom = 0
   
 @bot.event
 async def on_ready(): #bot boots up
-  global shroom_count
-  startup_timestamp = datetime.now(sgt).strftime('%Y/%m/%d, %H:%M:%S')
-  shroom_count = crash_check(shroom_count, startup_timestamp)
+  #global shroom_count
+  #startup_timestamp = datetime.now(sgt).strftime('%Y/%m/%d, %H:%M:%S')
+  #shroom_count = crash_check(shroom_count, startup_timestamp)
   print(f'{bot.user.name} has connected to Discord')
 
 @bot.listen('on_message') #waits for the on_message() event to be called
@@ -111,5 +111,5 @@ async def remote_send(message, target_channel, *, arg):
     
     #await channel.send(f'remote_send command executed at {command_execution}')
 
-keep_alive()
+#keep_alive()
 bot.run(TOKEN)
