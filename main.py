@@ -64,7 +64,7 @@ async def shroom_farm(message):
           else:
             embed = discord.Embed(title="Mushroom Farmed!", description=f"{shroom_count} mushrooms farmed today!🍄", color=discord.Color.red())
             await message.channel.send(embed=embed)
-          farm_time = datetime.now(sgt)
+          farm_time = int(datetime.now(sgt))
           write_data(shroom_count, farm_time)
     else:
       embed = discord.Embed(title="You cannot farm mushrooms now", description="You can only farm one mushroom at a time", color=discord.Color.red())
