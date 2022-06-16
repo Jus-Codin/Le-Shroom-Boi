@@ -20,7 +20,7 @@ def write_data(current_count, timestamp):
   }
   json.dump(data, open("data.json", "w"), indent=4)
 
- '''
+'''
 def crash_check(current_count, timestamp):
   precrash_data = read_data()
   last_count = precrash_data["Current count"]
@@ -33,3 +33,4 @@ def crash_check(current_count, timestamp):
   else:
     last_count = 0
     return last_count
+'''
