@@ -5,7 +5,7 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 from datetime import datetime
-from adfunc import crash_check, write_data
+from adfunc import write_data
 
 #self-made packages
 from keep_alive import keep_alive
