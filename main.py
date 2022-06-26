@@ -8,7 +8,7 @@ from datetime import datetime
 from adfunc import write_data
 
 #self-made packages
-from keep_alive import keep_alive
+#from keep_alive import keep_alive
 
 load_dotenv()
 bot = commands.Bot(command_prefix='$')
@@ -44,7 +44,7 @@ async def shroom_farm(message):
   if message.content == '🍄':
     if message.author.id != last_farmer:
       if str(message.channel.id) in channel_id: #and not message.author.bot:
-        current_dt = datetime.now().strftime('%d')
+        current_dt = datetime.now(sgt).strftime('%d')
         if current_dt != ts_lastshroom:
           last_farmer = 0
           shroom_count = 0
@@ -64,7 +64,7 @@ async def shroom_farm(message):
           else:
             embed = discord.Embed(title="Mushroom Farmed!", description=f"{shroom_count} mushrooms farmed today!🍄", color=discord.Color.red())
             await message.channel.send(embed=embed)
-          farm_time = int(datetime.now(sgt))
+          farm_time = datetime.now(sgt).strftime('%Y/%m/%d %H:%M:%S')
           write_data(shroom_count, farm_time)
     else:
       embed = discord.Embed(title="You cannot farm mushrooms now", description="You can only farm one mushroom at a time", color=discord.Color.red())
