@@ -5,7 +5,7 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 from datetime import datetime
-from adfunc import write_data
+from adfunc import write_data, read_data
 
 #self-made packages
 #from keep_alive import keep_alive
@@ -108,8 +108,11 @@ async def remote_send(message, target_channel, *, arg):
     command_embed.add_field(name="Message sent:", value=arg)
     command_embed.add_field(name="Message sent to:", value=str(target_channel))
     await channel.send(embed=command_embed)
-    
-    #await channel.send(f'remote_send command executed at {command_execution}')
 
-#keep_alive()
+@bot.command(name='show_save')
+async def showsave(message):
+  if message.author.id == int(OWNER_ID):
+    current_save = read_data()
+    print(current_save)
+
 bot.run(TOKEN)
