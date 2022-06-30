@@ -41,6 +41,7 @@ async def shroom_farm(message):
   global last_farmer
   global last_mushroom
   global ts_lastshroom
+  origin_id = 0
   if message.content == '🍄':
     if message.author.id != last_farmer:
       if str(message.channel.id) in channel_id: #and not message.author.bot:
@@ -65,7 +66,9 @@ async def shroom_farm(message):
             embed = discord.Embed(title="Mushroom Farmed!", description=f"{shroom_count} mushrooms farmed today!🍄", color=discord.Color.red())
             await message.channel.send(embed=embed)
           farm_time = datetime.now(sgt).strftime('%Y/%m/%d %H:%M:%S')
-          write_data(shroom_count, farm_time)
+          origin_id = message.message.guild.id
+          print(origin_id)
+          write_data(shroom_count, farm_time, 0)
     else:
       embed = discord.Embed(title="You cannot farm mushrooms now", description="You can only farm one mushroom at a time", color=discord.Color.red())
       await message.channel.send(embed=embed)
@@ -113,6 +116,7 @@ async def remote_send(message, target_channel, *, arg):
 async def showsave(message):
   if message.author.id == int(OWNER_ID):
     current_save = read_data()
-    print(current_save)
+    await message.channel.send(current_save)
 
+#keep_alive()
 bot.run(TOKEN)

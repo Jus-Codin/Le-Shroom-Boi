@@ -11,9 +11,10 @@ def read_data():
   data = json.load(open("data.json", 'r'))
   return data
 
-def write_data(current_count, timestamp):
+def write_data(current_count, timestamp, server_id):
   data = {
-    "Server ID": {
+    "Save data": {
+      "Server ID": server_id, 
       "Current count": current_count, 
       "Timestamp": timestamp
     }

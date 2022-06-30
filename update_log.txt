@@ -2,3 +2,8 @@
 - Changed admin commands to be logged with embeds instead of regular messages (now you can watch the bot experience an embed fail!)
 - Removed save_count and show_save from the command list (they were redundant). As compensation, the bot will now save the current count and timestamp every time a 🍄 is farmed (still doesnt fix the fact that the bot crashes every 5 hours with no way of backup xD)
 - Made it so that any timestamps that are recorded are now recorded in SGT instead of the default UTC
+
+30/6/2022
+- Changed hosting from replit to railway (bot should no longer go down unless it encounters bugs)
+- Updated README.txt to reflect the new changes
+- Updated code to be able to save the timestamp to the data.json file (damn forgot to add strftime lol)
