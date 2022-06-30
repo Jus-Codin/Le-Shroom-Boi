@@ -66,7 +66,7 @@ async def shroom_farm(message):
             embed = discord.Embed(title="Mushroom Farmed!", description=f"{shroom_count} mushrooms farmed today!🍄", color=discord.Color.red())
             await message.channel.send(embed=embed)
           farm_time = datetime.now(sgt).strftime('%Y/%m/%d %H:%M:%S')
-          origin_id = message.message.guild.id
+          origin_id = message.guild.id
           print(origin_id)
           write_data(shroom_count, farm_time, 0)
     else:
