@@ -67,8 +67,7 @@ async def shroom_farm(message):
             await message.channel.send(embed=embed)
           farm_time = datetime.now(sgt).strftime('%Y/%m/%d %H:%M:%S')
           origin_id = message.guild.id
-          print(origin_id)
-          write_data(shroom_count, farm_time, 0)
+          write_data(shroom_count, farm_time, origin_id)
     else:
       embed = discord.Embed(title="You cannot farm mushrooms now", description="You can only farm one mushroom at a time", color=discord.Color.red())
       await message.channel.send(embed=embed)
