@@ -69,7 +69,7 @@ async def shroom_farm(message):
           origin_id = message.guild.id
           write_data(shroom_count, farm_time, origin_id)
     else:
-      embed = discord.Embed(title="You cannot farm mushrooms now", description="You can only farm one mushroom at a time", color=discord.Color.red())
+      embed = discord.Embed(title="You cannot farm mushrooms now", description="You can only farm one mushroom at a time", color=discord.Color.green())
       await message.channel.send(embed=embed)
 
 @bot.command(name='edit_count', brief='Changes the current count', description='Changes the current count (Requires administrator access)')
@@ -82,7 +82,7 @@ async def edit_count(message, new_count):
     command_execution = datetime.now(sgt).strftime('%Y/%m/%d, %H:%M:%S')
     channel_to_send = int(logs_channel)
     channel = bot.get_channel(channel_to_send)
-    command_embed = discord.Embed(title="edit_count command executed", description=f'Count changed to {command_execution}', color=discord.Color.red())
+    command_embed = discord.Embed(title="edit_count command executed", description=f'Count changed to {command_execution}', color=discord.Color.green())
     farm_time = datetime.now(sgt).strftime('%Y/%m/%d %H:%M:%S')
     origin_id = message.guild.id
     write_data(shroom_count, farm_time, origin_id)
@@ -109,7 +109,7 @@ async def remote_send(message, target_channel, *, arg):
     command_execution = datetime.now(sgt).strftime('%Y/%m/%d, %H:%M:%S')
     channel_to_send = int(logs_channel)
     channel = bot.get_channel(channel_to_send)
-    command_embed = discord.Embed(title="remote_send command executed", description=f'Command executed at {command_execution}', color=discord.Color.red())
+    command_embed = discord.Embed(title="remote_send command executed", description=f'Command executed at {command_execution}', color=discord.Color.green())
     command_embed.add_field(name="Message sent:", value=arg)
     command_embed.add_field(name="Message sent to:", value=str(target_channel))
     await channel.send(embed=command_embed)
@@ -120,13 +120,19 @@ async def showsave(message):
     current_save = read_data()
     await message.channel.send(current_save)
 
-@bot.command(name='stats')
-async def showstats(message):
-  command_embed = discord.Embed(title="Current stats", color=0xde1717)
-  command_embed.add_field(name="Current count: ", value=shroom_count, inline=False)
-  user = bot.get_user(last_farmer)
-  command_embed.add_field(name="Last farmer", value=user, inline=True)
-  await message.channel.send(embed=command_embed)
+@bot.on_command_error(message, errormsg):
+async def invalid_command(command_used):
+  if isinstance(errormsg, commands.CommandNotFound):
+    command_embed = discord.Embed(title='Invalid Command', description='Command does not exist', color=discord.Color.red())
+    error_caught =  datetime.now(sgt).strftime('%Y/%m/%d, %H:%M:%S')
+    channel_to_send = int(logs_channel)
+    channel = bot.get_channel(channel_to-send)
+    error_embed = discord.Embed(title="Invalid command detected", description='A user has tried to execute an invalid command', color=discord.Color.red())
+    error_embed.add_field(name="Invalid command:", message)
+    error_embed.add_field(name="Error message", errormsg)
+    await command_used.channel.send(embed=command_embed)
+    await channel.send(embed=error_embed)
+    
 
 #keep_alive()
 bot.run(TOKEN)
