@@ -126,7 +126,7 @@ async def on_command_error(message, errormsg):
     command_embed = discord.Embed(title='Invalid Command', description='Command does not exist', color=discord.Color.red())
     error_caught =  datetime.now(sgt).strftime('%Y/%m/%d, %H:%M:%S')
     channel_to_send = int(logs_channel)
-    channel = bot.get_channel(channel_to-send)
+    channel = bot.get_channel(channel_to_send)
     error_embed = discord.Embed(title="Invalid command detected", description='A user has tried to execute an invalid command', color=discord.Color.red())
     error_embed.add_field(name="Invalid command:", value=message)
     error_embed.add_field(name="Error message:", value=errormsg)
