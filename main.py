@@ -128,12 +128,16 @@ async def on_command_error(message, errormsg):
     error_caught_timestamp =  datetime.now(sgt).strftime('%Y/%m/%d, %H:%M:%S')
     channel_to_send = int(logs_channel)
     channel = bot.get_channel(channel_to_send)
-    error_embed = discord.Embed(title="Invalid command detected", description='A user has tried to execute an invalid command', color=discord.Color.red())
-    error_embed.add_field(name="Invalid command:", value=message)
+    error_embed = discord.Embed(title="Invalid command executed", description='A user has tried to execute an invalid command', color=discord.Color.red())
     error_embed.add_field(name="Error message:", value=errormsg)
     error_embed.add_field(name="Timestamp error generated:", value=error_caught_timestamp)
     await channel.send(embed=error_embed)
-    
+
+'''
+@bot.event
+async def on_error(message, error_created):
+  some code here
+'''
 
 #keep_alive()
 bot.run(TOKEN)
