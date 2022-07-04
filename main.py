@@ -44,7 +44,7 @@ async def shroom_farm(message):
   origin_id = 0
   if message.content == '🍄':
     if message.author.id != last_farmer:
-      if str(message.channel.id) in channel_id: #and not message.author.bot:
+      if str(message.channel.id) in channel_id and not message.author.bot:
         current_dt = datetime.now(sgt).strftime('%d')
         if current_dt != ts_lastshroom:
           last_farmer = 0
@@ -83,6 +83,9 @@ async def edit_count(message, new_count):
     channel_to_send = int(logs_channel)
     channel = bot.get_channel(channel_to_send)
     command_embed = discord.Embed(title="edit_count command executed", description=f'Count changed to {command_execution}', color=discord.Color.red())
+    farm_time = datetime.now(sgt).strftime('%Y/%m/%d %H:%M:%S')
+    origin_id = message.guild.id
+    write_data(shroom_count, farm_time, origin_id)
     command_embed.add_field(name='Count changed from:', value=last_count)
     command_embed.add_field(name='New count:', value=new_count)
     await channel.send(embed=command_embed)
@@ -116,6 +119,14 @@ async def showsave(message):
   if message.author.id == int(OWNER_ID):
     current_save = read_data()
     await message.channel.send(current_save)
+
+@bot.command(name='stats')
+async def showstats(message):
+  command_embed = discord.Embed(title="Current stats", color=0xde1717)
+  command_embed.add_field(name="Current count: ", value=shroom_count, inline=False)
+  user = bot.get_user(last_farmer)
+  command_embed.add_field(name="Last farmer", value=user, inline=True)
+  await message.channel.send(embed=command_embed)
 
 #keep_alive()
 bot.run(TOKEN)
