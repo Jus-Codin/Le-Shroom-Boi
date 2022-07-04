@@ -120,8 +120,8 @@ async def showsave(message):
     current_save = read_data()
     await message.channel.send(current_save)
 
-@bot.on_command_error(message, errormsg):
-async def invalid_command(command_used):
+@bot.event():
+async def on_command_error(message, errormsg):
   if isinstance(errormsg, commands.CommandNotFound):
     command_embed = discord.Embed(title='Invalid Command', description='Command does not exist', color=discord.Color.red())
     error_caught =  datetime.now(sgt).strftime('%Y/%m/%d, %H:%M:%S')
