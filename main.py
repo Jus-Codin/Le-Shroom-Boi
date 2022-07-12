@@ -7,9 +7,6 @@ from dotenv import load_dotenv
 from datetime import datetime
 from adfunc import write_data, read_data
 
-#self-made packages
-#from keep_alive import keep_alive
-
 load_dotenv()
 bot = commands.Bot(command_prefix='$')
 
@@ -26,13 +23,28 @@ shroom_count = 0
 last_farmer = 0
 last_mushroom = 0
 
-  
+def admin_check(ctx):
+  return ctx.message.author.id == OWNER_ID and not ctx.message.guild
+
 @bot.event
 async def on_ready(): #bot boots up
   #global shroom_count
   #startup_timestamp = datetime.now(sgt).strftime('%Y/%m/%d, %H:%M:%S')
   #shroom_count = crash_check(shroom_count, startup_timestamp)
   print(f'{bot.user.name} has connected to Discord')
+
+@bot.event
+async def on_command_error(message, errormsg):
+  if isinstance(errormsg, commands.CommandNotFound):
+    command_embed = discord.Embed(title='Invalid Command', description='Command does not exist', color=discord.Color.red())
+    await message.channel.send(embed=command_embed)
+    error_caught_timestamp =  datetime.now(sgt).strftime('%Y/%m/%d, %H:%M:%S')
+    channel_to_send = int(logs_channel)
+    channel = bot.get_channel(channel_to_send)
+    error_embed = discord.Embed(title="Invalid command executed", description='A user has tried to execute an invalid command', color=discord.Color.red())
+    error_embed.add_field(name="Error message:", value=errormsg)
+    error_embed.add_field(name="Timestamp error generated:", value=error_caught_timestamp)
+    await channel.send(embed=error_embed)
 
 @bot.listen('on_message') #waits for the on_message() event to be called
 async def shroom_farm(message):
@@ -72,27 +84,26 @@ async def shroom_farm(message):
       embed = discord.Embed(title="You cannot farm mushrooms now", description="You can only farm one mushroom at a time", color=discord.Color.green())
       await message.channel.send(embed=embed)
 
-@bot.command(name='edit_count', brief='Changes the current count', description='Changes the current count (Requires administrator access)')
+@bot.command(name='edit_count', pass_context = True)
+@commands.check(admin_check)
 async def edit_count(message, new_count):
   global shroom_count
-  if message.author.id == int(OWNER_ID) and not message.guild:
-    last_count = shroom_count
-    shroom_count = int(new_count)
-    await message.channel.send(f'Count changed to {new_count}')
-    command_execution = datetime.now(sgt).strftime('%Y/%m/%d, %H:%M:%S')
-    channel_to_send = int(logs_channel)
-    channel = bot.get_channel(channel_to_send)
-    command_embed = discord.Embed(title="edit_count command executed", description=f'Count changed to {command_execution}', color=discord.Color.green())
-    farm_time = datetime.now(sgt).strftime('%Y/%m/%d %H:%M:%S')
-    origin_id = message.guild.id
-    write_data(shroom_count, farm_time, origin_id)
-    command_embed.add_field(name='Count changed from:', value=last_count)
-    command_embed.add_field(name='New count:', value=new_count)
-    await channel.send(embed=command_embed)
-  else:
-    await message.channel.send('You do not have sufficient permissions to use this command')
+  last_count = shroom_count
+  shroom_count = int(new_count)
+  await message.channel.send(f'Count changed to {new_count}')
+  command_execution = datetime.now(sgt).strftime('%Y/%m/%d, %H:%M:%S')
+  channel_to_send = int(logs_channel)
+  channel = bot.get_channel(channel_to_send)
+  command_embed = discord.Embed(title="edit_count command executed", description=f'Count changed to {command_execution}', color=discord.Color.green())
+  farm_time = datetime.now(sgt).strftime('%Y/%m/%d %H:%M:%S')
+  origin_id = message.guild.id
+  write_data(shroom_count, farm_time, origin_id)
+  command_embed.add_field(name='Count changed from:', value=last_count)
+  command_embed.add_field(name='New count:', value=new_count)
+  await channel.send(embed=command_embed)
 
-@bot.command(name='dev_warning', brief='Sends a dev warning', description='Sends a warning about active development to the target channel (Requires administrator access)')
+@bot.command(name='dev_warning', pass_context = True)
+@commands.check(admin_check)
 async def dev_warning(message, target_channel):
   if message.author.id == int(OWNER_ID) and not message.guild: #checks if the person sending the command has permissions to do so, and if its in a DM channel
     channel_to_send = int(target_channel)
@@ -100,7 +111,8 @@ async def dev_warning(message, target_channel):
     embed = discord.Embed(title="Dev warning", description="The bot will currently be under development")
     await channel.send(embed=embed)
 
-@bot.command(name='send', brief='Sends a message as the bot', description='Sends a message to the target channel as the bot (Requires administrator access)')
+@bot.command(name='send', brief='Sends a message as the bot', pass_context = True)
+@commands.check(admin_check)
 async def remote_send(message, target_channel, *, arg):
   if message.author.id == int(OWNER_ID) and not message.guild: #checks if the person sending the command has permissions to do so, and if its in a DM channel
     channel_to_send = int(target_channel)
@@ -115,29 +127,11 @@ async def remote_send(message, target_channel, *, arg):
     await channel.send(embed=command_embed)
 
 @bot.command(name='show_save')
+@commands.is_owner()
 async def showsave(message):
-  if message.author.id == int(OWNER_ID):
-    current_save = read_data()
-    await message.channel.send(current_save)
+  current_save = read_data()
+  await message.channel.send(current_save)
 
-@bot.event
-async def on_command_error(message, errormsg):
-  if isinstance(errormsg, commands.CommandNotFound):
-    command_embed = discord.Embed(title='Invalid Command', description='Command does not exist', color=discord.Color.red())
-    await message.channel.send(embed=command_embed)
-    error_caught_timestamp =  datetime.now(sgt).strftime('%Y/%m/%d, %H:%M:%S')
-    channel_to_send = int(logs_channel)
-    channel = bot.get_channel(channel_to_send)
-    error_embed = discord.Embed(title="Invalid command executed", description='A user has tried to execute an invalid command', color=discord.Color.red())
-    error_embed.add_field(name="Error message:", value=errormsg)
-    error_embed.add_field(name="Timestamp error generated:", value=error_caught_timestamp)
-    await channel.send(embed=error_embed)
-
-'''
-@bot.event
-async def on_error(message, error_created):
-  some code here
-'''
 
 #keep_alive()
 bot.run(TOKEN)
