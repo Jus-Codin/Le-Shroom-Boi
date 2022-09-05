@@ -13,11 +13,11 @@ bot = commands.Bot(command_prefix='$')
 #something to trigger the version control
 
 #initialization
-TOKEN = os.environ['DISCORD_TOKEN']
-OWNER_ID = os.environ['OWNER_ID']
-channel_id = os.environ['CHANNEL_ID']
-admin_channel = os.environ['ADMIN_CHANNEL']
-logs_channel = os.environ['LOGS_CHANNEL']
+TOKEN = os.getenv('DISCORD_TOKEN')
+OWNER_ID = os.getenv('OWNER_ID')
+channel_id = os.getenv('CHANNEL_ID')
+admin_channel = os.getenv('ADMIN_CHANNEL')
+logs_channel = os.getenv('LOGS_CHANNEL')
 sgt = pytz.timezone('Asia/Singapore')
 command_execute = 0
 ts_lastshroom = 0
