@@ -25,8 +25,6 @@ shroom_count = 0
 last_farmer = 0
 last_mushroom = 0
 
-def admin_check(ctx):
-  return ctx.message.author.id == OWNER_ID and not ctx.message.guild
 
 @bot.event
 async def on_ready(): #bot boots up
@@ -87,25 +85,24 @@ async def shroom_farm(message):
       await message.channel.send(embed=embed)
 
 @bot.command(name='edit_count', pass_context = True)
-@commands.check(admin_check)
 async def edit_count(message, new_count):
   global shroom_count
-  last_count = shroom_count
-  shroom_count = int(new_count)
-  await message.channel.send(f'Count changed to {new_count}')
-  command_execution = datetime.now(sgt).strftime('%Y/%m/%d, %H:%M:%S')
-  channel_to_send = int(logs_channel)
-  channel = bot.get_channel(channel_to_send)
-  command_embed = discord.Embed(title="edit_count command executed", description=f'Count changed to {command_execution}', color=discord.Color.green())
-  farm_time = datetime.now(sgt).strftime('%Y/%m/%d %H:%M:%S')
-  origin_id = message.guild.id
-  write_data(shroom_count, farm_time, origin_id)
-  command_embed.add_field(name='Count changed from:', value=last_count)
-  command_embed.add_field(name='New count:', value=new_count)
-  await channel.send(embed=command_embed)
+  if message.author.id == int(OWNER_ID and not message.guild:
+    last_count = shroom_count
+    shroom_count = int(new_count)
+    await message.channel.send(f'Count changed to {new_count}')
+    command_execution = datetime.now(sgt).strftime('%Y/%m/%d, %H:%M:%S')
+    channel_to_send = int(logs_channel)
+    channel = bot.get_channel(channel_to_send)
+    command_embed = discord.Embed(title="edit_count command executed", description=f'Count changed to {command_execution}', color=discord.Color.green())
+    farm_time = datetime.now(sgt).strftime('%Y/%m/%d %H:%M:%S')
+    origin_id = message.guild.id
+    write_data(shroom_count, farm_time, origin_id)
+    command_embed.add_field(name='Count changed from:', value=last_count)
+    command_embed.add_field(name='New count:', value=new_count)
+    await channel.send(embed=command_embed)
 
 @bot.command(name='dev_warning', pass_context = True)
-@commands.check(admin_check)
 async def dev_warning(message, target_channel):
   if message.author.id == int(OWNER_ID) and not message.guild: #checks if the person sending the command has permissions to do so, and if its in a DM channel
     channel_to_send = int(target_channel)
@@ -114,7 +111,6 @@ async def dev_warning(message, target_channel):
     await channel.send(embed=embed)
 
 @bot.command(name='send', brief='Sends a message as the bot', pass_context = True)
-@commands.check(admin_check)
 async def remote_send(message, target_channel, *, arg):
   if message.author.id == int(OWNER_ID) and not message.guild: #checks if the person sending the command has permissions to do so, and if its in a DM channel
     channel_to_send = int(target_channel)
