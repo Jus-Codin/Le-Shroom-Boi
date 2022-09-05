@@ -86,8 +86,8 @@ async def shroom_farm(message):
 
 @bot.command(name='edit_count', pass_context = True)
 async def edit_count(message, new_count):
-  global shroom_count
-  if message.author.id == int(OWNER_ID and not message.guild:
+  if message.author.id == int(OWNER_ID) and not message.guild:
+    global shroom_count
     last_count = shroom_count
     shroom_count = int(new_count)
     await message.channel.send(f'Count changed to {new_count}')
