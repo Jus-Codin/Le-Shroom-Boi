@@ -2,6 +2,7 @@
 import os
 import pytz
 import discord
+import dotenv
 from discord.ext import commands
 from dotenv import load_dotenv
 from datetime import datetime
@@ -13,11 +14,12 @@ bot = commands.Bot(command_prefix='$')
 #something to trigger the version control
 
 #initialization
-TOKEN = "OTM0Njk2MDMzODUyNzQzNzEw.G-KIhl.9w8LbaSDF6EoNiBj51KgGFLmnLnQ0kDacGzI4U" # os.getenv('DISCORD_TOKEN')
-OWNER_ID = 759195783597129760 #os.getenv('OWNER_ID')
-channel_id = [958289601263468554, 970627902389518377] #os.getenv('CHANNEL_ID')
-admin_channel = 970627902389518377 #os.getenv('ADMIN_CHANNEL')
-logs_channel = 977094254188953600 #os.getenv('LOGS_CHANNEL')
+dotenv.load_dotenv()
+TOKEN =  os.getenv('DISCORD_TOKEN')
+OWNER_ID = os.getenv('OWNER_ID')
+channel_id = os.getenv('CHANNEL_ID')
+admin_channel = os.getenv('ADMIN_CHANNEL')
+logs_channel = os.getenv('LOGS_CHANNEL')
 sgt = pytz.timezone('Asia/Singapore')
 command_execute = 0
 ts_lastshroom = 0
