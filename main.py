@@ -2,19 +2,17 @@
 import os
 import pytz
 import discord
-import dotenv
 from discord.ext import commands
 from dotenv import load_dotenv
 from datetime import datetime
 from adfunc import write_data, read_data
 
-load_dotenv()
+#load_dotenv()
 bot = commands.Bot(command_prefix='$')
 
 #something to trigger the version control
 
 #initialization
-dotenv.load_dotenv()
 TOKEN =  os.getenv('DISCORD_TOKEN')
 OWNER_ID = os.getenv('OWNER_ID')
 channel_id = os.getenv('CHANNEL_ID')
