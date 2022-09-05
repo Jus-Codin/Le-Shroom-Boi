@@ -10,6 +10,8 @@ from adfunc import write_data, read_data
 load_dotenv()
 bot = commands.Bot(command_prefix='$')
 
+#something to trigger the version control
+
 #initialization
 TOKEN = os.environ['DISCORD_TOKEN']
 OWNER_ID = os.environ['OWNER_ID']
