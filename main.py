@@ -13,7 +13,7 @@ bot = commands.Bot(command_prefix='$')
 #something to trigger the version control
 
 #initialization
-TOKEN = os.getenv['DISCORD_TOKEN']
+TOKEN = os.environ['DISCORD_TOKEN']
 OWNER_ID = os.environ['OWNER_ID']
 channel_id = os.environ['CHANNEL_ID']
 admin_channel = os.environ['ADMIN_CHANNEL']
