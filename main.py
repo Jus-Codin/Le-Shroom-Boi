@@ -1,4 +1,4 @@
-# bot.py
+ # bot.py
 import os
 import pytz
 import discord
@@ -55,8 +55,19 @@ async def shroom_farm(message):
   global ts_lastshroom
   origin_id = 0
   if message.content == '🍄':
+    current_dt = datetime.now(sgt).strftime('%d')
+    if current_dt != ts_lastshroom:
+      last_farmer = 0
+      shroom_count = 0
+      ts_lastshroom = current_dt
+      reset_time = datetime.now(sgt).strftime('%Y/%m/%d, %H:%M:%S')
+      channel_to_send = int(logs_channel)
+      channel = bot.get_channel(channel_to_send)
+      command_embed = discord.Embed(title="Count resetted", description=f'Count resetted at {reset_time}', color=discord.Color.red())
+      await channel.send(embed=command_embed)
     if message.author.id != last_farmer:
       if str(message.channel.id) in channel_id and not message.author.bot:
+        """
         current_dt = datetime.now(sgt).strftime('%d')
         if current_dt != ts_lastshroom:
           last_farmer = 0
@@ -67,6 +78,7 @@ async def shroom_farm(message):
           channel = bot.get_channel(channel_to_send)
           command_embed = discord.Embed(title="Count resetted", description=f'Count resetted at {reset_time}', color=discord.Color.red())
           await channel.send(embed=command_embed)
+        """
         if message.author.id != last_farmer:
           last_mushroom = current_dt
           shroom_count += 1
