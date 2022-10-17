@@ -7,6 +7,8 @@ global current_count
 global timestamp
 global data
 
+
+
 def read_data():
   data = json.load(open("data.json", 'r'))
   return data

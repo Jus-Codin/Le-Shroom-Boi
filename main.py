@@ -5,7 +5,7 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 from datetime import datetime
-from adfunc import write_data, read_data
+from save import write_data, read_data
 
 #load_dotenv()
 bot = commands.Bot(command_prefix='$')
@@ -19,6 +19,7 @@ channel_id = os.getenv('CHANNEL_ID')
 admin_channel = os.getenv('ADMIN_CHANNEL')
 logs_channel = os.getenv('LOGS_CHANNEL')
 sgt = pytz.timezone('Asia/Singapore')
+dev_mode = True
 command_execute = 0
 ts_lastshroom = 0
 shroom_count = 0
@@ -32,6 +33,7 @@ async def on_ready(): #bot boots up
   #startup_timestamp = datetime.now(sgt).strftime('%Y/%m/%d, %H:%M:%S')
   #shroom_count = crash_check(shroom_count, startup_timestamp)
   print(f'{bot.user.name} has connected to Discord')
+
 
 @bot.event
 async def on_command_error(message, errormsg):
@@ -66,19 +68,7 @@ async def shroom_farm(message):
       command_embed = discord.Embed(title="Count resetted", description=f'Count resetted at {reset_time}', color=discord.Color.red())
       await channel.send(embed=command_embed)
     if message.author.id != last_farmer:
-      if str(message.channel.id) in channel_id and not message.author.bot:
-        """
-        current_dt = datetime.now(sgt).strftime('%d')
-        if current_dt != ts_lastshroom:
-          last_farmer = 0
-          shroom_count = 0
-          ts_lastshroom = current_dt
-          reset_time = datetime.now(sgt).strftime('%Y/%m/%d, %H:%M:%S')
-          channel_to_send = int(logs_channel)
-          channel = bot.get_channel(channel_to_send)
-          command_embed = discord.Embed(title="Count resetted", description=f'Count resetted at {reset_time}', color=discord.Color.red())
-          await channel.send(embed=command_embed)
-        """
+      if str(message.channel.id) == channel_id and not message.author.bot: #change back to str(message.channel.id) in channel_id
         if message.author.id != last_farmer:
           last_mushroom = current_dt
           shroom_count += 1
@@ -95,6 +85,7 @@ async def shroom_farm(message):
     else:
       embed = discord.Embed(title="You cannot farm mushrooms now", description="You can only farm one mushroom at a time", color=discord.Color.green())
       await message.channel.send(embed=embed)
+
 
 @bot.command(name='edit_count', pass_context = True)
 async def edit_count(message, new_count):
@@ -113,6 +104,7 @@ async def edit_count(message, new_count):
     command_embed.add_field(name='Count changed from:', value=last_count)
     command_embed.add_field(name='New count:', value=new_count)
     await channel.send(embed=command_embed)
+
 
 @bot.command(name='dev_warning', pass_context = True)
 async def dev_warning(message, target_channel):
