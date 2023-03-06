@@ -3,11 +3,9 @@ import os
 import pytz
 import discord
 from discord.ext import commands
-from dotenv import load_dotenv
 from datetime import datetime
 from save import write_data, read_data
 
-#load_dotenv()
 bot = commands.Bot(command_prefix='$')
 
 #something to trigger the version control
